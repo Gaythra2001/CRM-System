@@ -1,0 +1,718 @@
+# 💼 CRM Pro - Financial Management System
+
+<div align="center">
+
+![CRM Pro](https://img.shields.io/badge/CRM-Professional-blue?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19.0-61dafb?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-LTS-339933?style=for-the-badge&logo=node.js)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-00758f?style=for-the-badge&logo=mysql)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+A modern, full-stack Customer Relationship Management (CRM) system designed for financial institutions and mortgage brokerage firms.
+
+[Features](#features) • [Quick Start](#quick-start) • [Installation](#installation) • [Documentation](#documentation) • [Support](#support)
+
+</div>
+
+---
+
+## 🎯 Overview
+
+**CRM Pro** is a comprehensive financial management solution built with cutting-edge web technologies. It enables financial planners, mortgage brokers, and administrators to manage clients, tickets, and financial transactions in a unified, intuitive platform.
+
+### 🌟 Key Highlights
+
+- **Role-Based Access Control** - Admin, Financial Planner, and Mortgage Broker roles
+- **Ticket Management System** - Track and manage client financial requests
+- **Real-Time Dashboard** - Monitor tickets and financial activities
+- **Secure Authentication** - JWT-based token authentication
+- **Responsive Design** - Works seamlessly on desktop and tablet devices
+- **Modern UI/UX** - Built with React and Tailwind CSS
+
+---
+
+## ✨ Features
+
+### 📊 Dashboard
+- **Finance Planner Dashboard** - Overview of assigned tickets and financial metrics
+- **Admin Dashboard** - System-wide statistics and user management
+- **Real-time Updates** - Live ticket status tracking
+
+### 🎫 Ticket Management
+- Create, read, update, and delete financial tickets
+- Assign tickets to brokers and planners
+- Track ticket status (open, in_progress, closed)
+- Client information management
+- Financial amount tracking
+
+### 👥 User Management
+- Create and manage multiple user accounts
+- Role-based access control (Admin, Planner, Broker)
+- User profile management
+- Secure password reset functionality
+
+### 🔐 Authentication & Security
+- JWT-based authentication
+- Secure password hashing with bcrypt
+- Email-based password recovery
+- Session management
+
+### 📱 Responsive Design
+- Mobile-friendly interface
+- Adaptive layouts
+- Smooth animations and transitions
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React** 19.0 - UI library
+- **Vite** - Next-generation build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **Axios** - HTTP client
+- **React Router** - Client-side routing
+- **React Toastify** - Toast notifications
+- **Lucide React** - Icon library
+
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MySQL2** - Database driver
+- **Sequelize** - ORM
+- **JWT** - Authentication tokens
+- **Bcrypt** - Password hashing
+- **Nodemailer** - Email sending
+- **CORS** - Cross-origin resource sharing
+
+### Database
+- **MySQL 8.0+** - Relational database
+
+---
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **npm** (comes with Node.js)
+- **MySQL Server** 8.0+ - [Download](https://dev.mysql.com/downloads/mysql/)
+- **Git** (optional) - [Download](https://git-scm.com/)
+
+### Verify Installation
+```bash
+node --version
+npm --version
+mysql --version
+```
+
+---
+
+## 🚀 Quick Start
+
+Get the system running in 5 minutes:
+
+### 1. Install MySQL
+Download and install MySQL Community Server from [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/)
+
+Remember your root password during installation.
+
+### 2. Navigate to Project
+```bash
+cd c:\Users\User\Desktop\crm-system-main
+```
+
+### 3. Run Automated Setup
+```bash
+cd backend
+npm run setup -- your_mysql_root_password
+```
+
+Example:
+```bash
+npm run setup -- root123
+```
+
+This will:
+- ✅ Create the database
+- ✅ Import schemas and data
+- ✅ Seed sample users and tickets
+- ✅ Configure backend environment
+
+### 4. Update Backend Configuration
+Edit `backend/.env`:
+```env
+DB_PASSWORD=your_mysql_root_password
+USE_DEV_LOGIN=false
+```
+
+### 5. Start Services
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm start
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+### 6. Access the Application
+Open your browser and navigate to: **http://localhost:5174/**
+
+---
+
+## 📦 Installation
+
+### Full Setup Guide
+
+#### Step 1: Clone or Extract Project
+```bash
+# If using git
+git clone <repository-url>
+cd crm-system-main
+
+# OR extract the provided archive
+```
+
+#### Step 2: Install Dependencies
+```bash
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+#### Step 3: Setup Database
+
+Ensure MySQL is running:
+```powershell
+# Windows - PowerShell
+Get-Service -Name MySQL* | Start-Service
+```
+
+Create the database and import schemas:
+```bash
+cd backend
+npm run setup -- your_root_password
+```
+
+#### Step 4: Configure Environment
+
+**Backend Configuration** (`backend/.env`):
+```env
+PORT=5000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_root_password
+DB_NAME=financial_crm_db
+JWT_SECRET=your_jwt_secret_key_here_change_in_production
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_PASS=your_gmail_app_password
+USE_DEV_LOGIN=false
+```
+
+**Frontend Configuration** (`frontend/.env`):
+```env
+VITE_BASE_URL=http://localhost:5000
+```
+
+#### Step 5: Start Servers
+```bash
+# Backend
+cd backend
+npm start
+
+# Frontend (in another terminal)
+cd frontend
+npm run dev
+```
+
+#### Step 6: Access Application
+Navigate to: **http://localhost:5174/**
+
+---
+
+## 🔑 Test Credentials
+
+After setup, use these credentials to log in:
+
+| Role | Username | Password | Email |
+|------|----------|----------|-------|
+| Admin | `admin` | `admin123` | admin@crm.com |
+| Financial Planner | `planner1` | `planner123` | planner1@crm.com |
+| Mortgage Broker | `broker1` | `broker123` | broker1@crm.com |
+| Planner | `planner2` | `planner456` | planner2@crm.com |
+
+### Development Mode
+If MySQL is not set up, use development credentials:
+- Username: `testuser`
+- Password: `test123`
+
+---
+
+## 📁 Project Structure
+
+```
+crm-system-main/
+├── frontend/                          # React Frontend Application
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── index.css
+│   │   ├── auth/                     # Authentication pages
+│   │   │   ├── Login.jsx
+│   │   │   ├── forgetPassword.jsx
+│   │   │   └── resetPassword.jsx
+│   │   ├── components/               # Reusable components
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── Dashboard/
+│   │   │   ├── Ticket/
+│   │   │   └── user/
+│   │   ├── context/                  # Context API
+│   │   │   └── AuthContext.jsx
+│   │   ├── pages/
+│   │   │   └── Dashboard.jsx
+│   │   └── service/                  # API services
+│   │       ├── authAPI.js
+│   │       ├── ticketsAPI.js
+│   │       └── userAPI.js
+│   ├── package.json
+│   ├── vite.config.js
+│   └── README.md
+│
+├── backend/                           # Node.js Backend API
+│   ├── server.js                      # Entry point
+│   ├── config/
+│   │   ├── config.js                 # Environment config
+│   │   └── db.js                     # Database connection
+│   ├── controllers/                   # Request handlers
+│   │   ├── authController.js
+│   │   ├── ticketController.js
+│   │   └── userController.js
+│   ├── models/                        # Data models
+│   │   ├── User.js
+│   │   └── Ticket.js
+│   ├── routes/                        # API routes
+│   │   ├── authRoutes.js
+│   │   ├── ticketRoutes.js
+│   │   └── userRoutes.js
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── scripts/
+│   │   └── import-db.ps1
+│   ├── package.json
+│   ├── .env
+│   ├── createTestUser.js
+│   ├── seedDatabase.js
+│   ├── fullSetup.js
+│   └── README.md
+│
+├── financial_crm_db_users.sql         # User table schema
+├── financial_crm_db_tickets.sql       # Ticket table schema
+├── SETUP.bat                          # Windows setup helper
+└── README.md                          # This file
+```
+
+---
+
+## 🔌 API Documentation
+
+### Base URL
+```
+http://localhost:5000/api/v1
+```
+
+### Authentication Endpoints
+
+#### Login
+```
+POST /auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+Response:
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "role": "admin",
+  "id": 1
+}
+```
+
+#### Forgot Password
+```
+POST /auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "admin@crm.com"
+}
+```
+
+#### Reset Password
+```
+PUT /auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "reset_token_from_email",
+  "newPassword": "newpassword123"
+}
+```
+
+### Ticket Endpoints
+
+#### Get All Tickets
+```
+GET /tickets
+Headers: Authorization: Bearer {token}
+```
+
+#### Create Ticket
+```
+POST /tickets
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "serial_number": "TKT006",
+  "client_name": "Client Name",
+  "client_address": "123 Main St",
+  "client_contact": "555-0100",
+  "amount": 50000.00,
+  "assigned_to": 3,
+  "status": "open"
+}
+```
+
+#### Update Ticket
+```
+PUT /tickets/{id}
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "status": "in_progress",
+  "assigned_to": 3
+}
+```
+
+#### Delete Ticket
+```
+DELETE /tickets/{id}
+Headers: Authorization: Bearer {token}
+```
+
+### User Endpoints
+
+#### Get All Users
+```
+GET /users
+Headers: Authorization: Bearer {token}
+```
+
+#### Create User
+```
+POST /users
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "email": "newuser@crm.com",
+  "password": "password123",
+  "fullName": "New User",
+  "role": "financial_planner"
+}
+```
+
+#### Update User
+```
+PUT /users/{id}
+Headers: Authorization: Bearer {token}
+```
+
+#### Delete User
+```
+DELETE /users/{id}
+Headers: Authorization: Bearer {token}
+```
+
+---
+
+## 📝 npm Scripts
+
+### Backend Scripts
+```bash
+npm start           # Start production server
+npm run dev         # Start with nodemon (hot reload)
+npm run seed:test   # Create test user
+npm run seed:prod   # Seed database with sample data
+npm run setup       # Full automated setup
+```
+
+### Frontend Scripts
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+npm run lint        # Run ESLint
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Issue: "Invalid credentials" on login
+
+**Solution:**
+1. Verify backend is running: `npm start` in backend folder
+2. Check `.env` file has correct settings
+3. For MySQL DB, ensure MySQL service is running
+4. Clear browser cache and refresh
+
+### Issue: MySQL connection refused
+
+**Solution:**
+```powershell
+# Start MySQL service
+Get-Service -Name MySQL* | Start-Service
+
+# Verify it's running
+Get-Service -Name MySQL* | Format-Table Status, Name
+```
+
+### Issue: Port 5173/5174 already in use
+
+**Solution:**
+```bash
+# Kill the process using the port
+# On Windows - find process using port 5173
+Get-Process -Name "node" | Stop-Process -Force
+
+# Then restart the server
+npm run dev
+```
+
+### Issue: Backend shows "Error connecting to database"
+
+**Solution:**
+1. MySQL must be installed and running
+2. Check root password in `.env` is correct
+3. Verify database was created: `npm run setup -- password`
+4. For dev/testing without MySQL, set `USE_DEV_LOGIN=true` in `.env`
+
+### Issue: CORS errors when calling API
+
+**Solution:**
+1. Verify backend is running on port 5000
+2. Check `frontend/.env` has correct `VITE_BASE_URL`
+3. Restart frontend: `npm run dev`
+4. Clear browser cache
+
+---
+
+## 🔐 Security Notes
+
+- ⚠️ **Change default passwords** before deploying to production
+- ⚠️ **Update JWT_SECRET** in `.env` with a strong random string
+- ⚠️ **Enable HTTPS** in production
+- ⚠️ **Use environment variables** for sensitive data
+- ⚠️ **Implement rate limiting** on API endpoints
+- ⚠️ **Validate all inputs** on backend
+
+---
+
+## 📧 Email Configuration
+
+To enable password reset emails:
+
+1. Enable 2-Step Verification on your Gmail account
+2. Generate an App Password at [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
+3. Update `backend/.env`:
+```env
+GMAIL_USER=your_email@gmail.com
+GMAIL_PASS=your_app_password
+```
+
+---
+
+## 📊 Database Schema
+
+### Users Table
+```sql
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  fullName VARCHAR(255),
+  role ENUM('admin', 'financial_planner', 'mortgage_broker'),
+  resetPasswordToken VARCHAR(255),
+  resetPasswordExpires DATETIME,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Tickets Table
+```sql
+CREATE TABLE tickets (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  serial_number VARCHAR(50) UNIQUE NOT NULL,
+  client_name VARCHAR(100) NOT NULL,
+  client_address VARCHAR(255),
+  client_contact VARCHAR(50),
+  amount DECIMAL(10,2),
+  created_by INT,
+  assigned_to INT,
+  status ENUM('open', 'in_progress', 'closed'),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id),
+  FOREIGN KEY (assigned_to) REFERENCES users(id)
+);
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 💡 Tips & Best Practices
+
+### For Administrators
+- Create separate user accounts for each team member
+- Regularly backup the database
+- Monitor ticket status and team performance
+- Review access logs for security
+
+### For Financial Planners
+- Assign tickets to brokers promptly
+- Update ticket status regularly
+- Add detailed client information
+- Use the dashboard to track workload
+
+### For Mortgage Brokers
+- Respond to assigned tickets promptly
+- Update client status and financial details
+- Close tickets when complete
+- Track assigned amounts and portfolio
+
+---
+
+## 🆘 Support & Help
+
+### Troubleshooting
+- Check the [Troubleshooting](#troubleshooting) section above
+- Review backend console logs for errors
+- Verify all services are running
+
+### Documentation
+- Review code comments in source files
+- Check API Documentation section
+- Examine database schema
+
+### Contact
+For issues, feature requests, or questions:
+- Create an issue in the repository
+- Review existing documentation
+- Check console logs for error messages
+
+---
+
+## 🎉 Getting Started Checklist
+
+- [ ] Install Node.js and MySQL
+- [ ] Clone/extract the project
+- [ ] Install dependencies (`npm install` in both folders)
+- [ ] Run setup script (`npm run setup -- password`)
+- [ ] Update `.env` files with correct configuration
+- [ ] Start backend (`npm start`)
+- [ ] Start frontend (`npm run dev`)
+- [ ] Open http://localhost:5174/
+- [ ] Log in with test credentials
+- [ ] Explore the dashboard
+
+---
+
+## 📈 Performance Tips
+
+- Enable caching for API responses
+- Use database indexes on frequently queried fields
+- Implement pagination for large datasets
+- Optimize images and assets
+- Use CDN for static files in production
+
+---
+
+## 🚀 Deployment
+
+### For Production
+
+1. **Build frontend:**
+```bash
+cd frontend
+npm run build
+```
+
+2. **Configure environment variables:**
+- Update all `.env` values for production
+- Use strong JWT_SECRET
+- Configure real database host
+
+3. **Use process manager:**
+```bash
+npm install -g pm2
+pm2 start backend/server.js --name "crm-backend"
+```
+
+4. **Setup reverse proxy (Nginx/Apache)**
+
+5. **Enable HTTPS with SSL certificate**
+
+---
+
+## 📞 Quick Reference
+
+| Component | Port | URL |
+|-----------|------|-----|
+| Frontend | 5173/5174 | http://localhost:5173 |
+| Backend API | 5000 | http://localhost:5000 |
+| MySQL | 3306 | localhost:3306 |
+
+---
+
+<div align="center">
+
+### Made with ❤️ for Financial Professionals
+
+**Happy Managing!** 🎯
+
+[⬆ Back to Top](#-crm-pro---financial-management-system)
+
+</div>
