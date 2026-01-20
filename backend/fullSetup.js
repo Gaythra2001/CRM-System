@@ -5,7 +5,7 @@ const path = require("path");
 const args = process.argv.slice(2);
 const rootPassword = args[0] || "";
 
-if (!rootPassword) {
+if (!rootPassword && process.argv.length > 2) {
   console.log("\n❌ MySQL root password is required!");
   console.log("\nUsage: node fullSetup.js YOUR_MYSQL_ROOT_PASSWORD\n");
   console.log("Example: node fullSetup.js root123\n");
@@ -74,8 +74,28 @@ const setup = async () => {
     }
     console.log("✅ Tickets schema imported\n");
 
+    // Read and execute CRM extension schema (customers, leads, tasks, etc.)
+    console.log("4️⃣  Importing CRM extension schema...");
+    const crmSql = fs.readFileSync(
+      path.join(__dirname, "../financial_crm_db_crm.sql"),
+      "utf-8"
+    );
+    const crmStatements = crmSql
+      .split(";")
+      .filter((s) => s.trim() && !s.trim().startsWith("--"));
+    for (const stmt of crmStatements) {
+      if (stmt.trim()) {
+        try {
+          await connection.query(stmt);
+        } catch (err) {
+          // Ignore errors from idempotent creates
+        }
+      }
+    }
+    console.log("✅ CRM extension schema imported\n");
+
     // Update backend .env
-    console.log("4️⃣  Updating backend configuration...");
+    console.log("5️⃣  Updating backend configuration...");
     const envContent = `PORT=5000
 DB_HOST=localhost
 DB_USER=root
@@ -90,7 +110,7 @@ USE_DEV_LOGIN=false
     console.log("✅ Backend configuration updated\n");
 
     // Seed data
-    console.log("5️⃣  Seeding sample data...");
+    console.log("6️⃣  Seeding sample data...");
     const bcrypt = require("bcrypt");
 
     // Clear existing test data
@@ -208,6 +228,88 @@ USE_DEV_LOGIN=false
         ]
       );
       console.log(`  ✅ Created ticket: ${ticket.serial_number}`);
+    }
+
+    // Seed customers
+    const customers = [
+      {
+        name: "Acme Holdings",
+        email: "contact@acme.com",
+        phone: "555-2000",
+        address: "100 Market St, SF",
+        created_by: userMap["planner1"],
+        owner_id: userMap["planner1"],
+      },
+      {
+        name: "Harbor Investments",
+        email: "hello@harbor.com",
+        phone: "555-2001",
+        address: "42 Ocean Ave, Miami",
+        created_by: userMap["planner2"],
+        owner_id: userMap["planner2"],
+      },
+    ];
+
+    for (const customer of customers) {
+      await connection.query(
+        "INSERT INTO customers (name, email, phone, address, created_by, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          customer.name,
+          customer.email,
+          customer.phone,
+          customer.address,
+          customer.created_by,
+          customer.owner_id,
+        ]
+      );
+      console.log(`  ✅ Created customer: ${customer.name}`);
+    }
+
+    // Seed leads
+    const leads = [
+      {
+        name: "Nova Fintech",
+        email: "info@nova.com",
+        phone: "555-3000",
+        source: "Website",
+        status: "new",
+        value: 250000,
+        notes: "Interested in refinancing package.",
+        next_action_at: new Date(Date.now() + 3 * 24 * 3600 * 1000),
+        created_by: userMap["planner1"],
+        owner_id: userMap["broker1"],
+      },
+      {
+        name: "Evergreen Homes",
+        email: "contact@evergreen.com",
+        phone: "555-3001",
+        source: "Referral",
+        status: "contacted",
+        value: 150000,
+        notes: "Requesting rate sheet.",
+        next_action_at: new Date(Date.now() + 5 * 24 * 3600 * 1000),
+        created_by: userMap["planner2"],
+        owner_id: userMap["broker1"],
+      },
+    ];
+
+    for (const lead of leads) {
+      await connection.query(
+        "INSERT INTO leads (name, email, phone, source, status, value, notes, next_action_at, created_by, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          lead.name,
+          lead.email,
+          lead.phone,
+          lead.source,
+          lead.status,
+          lead.value,
+          lead.notes,
+          lead.next_action_at,
+          lead.created_by,
+          lead.owner_id,
+        ]
+      );
+      console.log(`  ✅ Created lead: ${lead.name}`);
     }
 
     console.log("\n✨ Setup Complete!\n");
