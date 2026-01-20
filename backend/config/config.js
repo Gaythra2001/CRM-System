@@ -9,6 +9,7 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
 
 const JWT_SECRET = process.env.JWT_SECRET;
+const USE_DEV_LOGIN = process.env.USE_DEV_LOGIN === "true";
 
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_PASS = process.env.GMAIL_PASS;
@@ -22,5 +23,6 @@ module.exports = {
     JWT_SECRET,
     PORT,
     GMAIL_USER,
-    GMAIL_PASS
+    GMAIL_PASS,
+    USE_DEV_LOGIN
 };

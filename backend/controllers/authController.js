@@ -1,13 +1,22 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
-const { JWT_SECRET, GMAIL_USER, GMAIL_PASS } = require("../config/config");
+const { JWT_SECRET, GMAIL_USER, GMAIL_PASS, USE_DEV_LOGIN } = require("../config/config");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { Op } = require("sequelize");
 
 const login = async (req, res) => {
   const { username, password } = req.body;
+
+  // Dev-only fallback to allow login without DB
+  if (USE_DEV_LOGIN && username === "testuser" && password === "test123") {
+    const token = jwt.sign({ id: 999, role: "financial_planner" }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.json({ token, role: "financial_planner", id: 999 });
+  }
+
   const user = await User.findByUsername(username);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
