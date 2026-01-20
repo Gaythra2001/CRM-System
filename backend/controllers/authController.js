@@ -9,20 +9,26 @@ const { Op } = require("sequelize");
 const login = async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(`[AUTH] Login attempt: ${username}, DEV_LOGIN=${USE_DEV_LOGIN}`);
+
   // Dev-only fallback to allow login without DB
   if (USE_DEV_LOGIN && username === "testuser" && password === "test123") {
+    console.log("[AUTH] Dev login successful");
     const token = jwt.sign({ id: 999, role: "financial_planner" }, JWT_SECRET, {
       expiresIn: "1h",
     });
     return res.json({ token, role: "financial_planner", id: 999 });
   }
 
+  console.log("[AUTH] Attempting database login");
   const user = await User.findByUsername(username);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
+    console.log("[AUTH] Login failed: invalid credentials");
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
+  console.log("[AUTH] Database login successful");
   const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
     expiresIn: "1h",
   });
