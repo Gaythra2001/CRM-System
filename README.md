@@ -66,41 +66,78 @@ A modern, full-stack Customer Relationship Management (CRM) system designed for 
 
 ## 🧭 Core CRM Components
 
-1. **User & Role Management**
-  - Admin, Manager, Staff roles; login/logout; password reset; granular permissions
+### ✅ Implemented Features
 
-2. **Customer Management**
-  - Add/Edit/Delete customers; profiles (name, phone, email, address); interaction history
+1. **✅ User & Role Management**
+  - Admin, Financial Planner, Mortgage Broker roles
+  - Login/logout with JWT authentication
+  - Password reset via email
+  - Role-based access control
 
-3. **Lead Management**
-  - Capture leads; statuses (New, Contacted, Qualified, Lost); convert lead → customer
+2. **✅ Customer Management**
+  - Add/Edit/Delete customers
+  - Customer profiles (name, phone, email, address)
+  - Owner assignment and tracking
+  - Customer status management (active/inactive)
 
-4. **Contact Management**
-  - Multiple contacts per customer; call/email logs; per-contact notes
+3. **✅ Lead Management**
+  - Create and capture leads from multiple sources
+  - Lead statuses (New, Contacted, Qualified, Lost)
+  - Convert lead → customer with one click
+  - Track lead value and next action dates
+  - Lead assignment and ownership
 
-5. **Sales Management**
-  - Deals/opportunities; stages (Prospect → Negotiation → Won); expected revenue; close dates
+4. **✅ Contact Management**
+  - Database support for multiple contacts per customer
+  - Contact details (name, email, phone, title)
+  - Primary contact designation
 
-6. **Task & Activity Management**
-  - Create/assign tasks; due dates & reminders; follow-ups
+5. **✅ Task & Activity Management**
+  - Create and assign tasks to team members
+  - Due dates and reminder scheduling
+  - Task status tracking (Open, In Progress, Done)
+  - Link tasks to leads, customers, deals, or tickets
+  - Task inbox for assigned activities
 
-7. **Communication Tracking**
-  - Email tracking; call logs; meeting notes; optional WhatsApp/SMS
+6. **✅ Ticket System**
+  - Create and manage financial tickets
+  - Assign tickets to brokers and planners
+  - Track ticket status (Open, In Progress, Closed)
+  - Client information and amount tracking
+  - Serial number generation
 
-8. **Reports & Dashboard**
-  - Sales reports; lead conversion; customer growth; user performance
+7. **✅ Communication Tracking**
+  - Database support for interaction logging
+  - Track calls, emails, meetings, SMS, and notes
+  - Link interactions to leads, customers, deals, or tickets
 
-9. **Notification System**
-  - Task reminders; follow-up alerts; new lead notifications
+8. **✅ Dashboard & Reports**
+  - Role-based dashboards (Admin, Planner, Broker)
+  - Real-time ticket statistics
+  - User management overview
+  - Customer and lead tracking
 
-10. **Document Management**
-   - Upload/store contracts, invoices, and customer documents
+9. **✅ Notification System**
+  - Database infrastructure ready
+  - User-specific notifications
+  - Read/unread status tracking
 
-11. **Billing & Invoicing (Optional)**
-   - Create invoices; payment status; receipts; tax calculation
+10. **✅ Document Management**
+   - Database support for document storage
+   - Link documents to leads, customers, deals, or tickets
+   - Track uploaded files and uploaders
+
+### 🚧 Database-Ready (UI Coming Soon)
+
+11. **Deals & Pipeline Management**
+   - Database tables created for deal tracking
+   - Stage management (Prospect, Negotiation, Won, Lost)
+   - Expected revenue and close date tracking
+   - Deal ownership and customer linking
 
 12. **Settings & Configuration**
-   - Company details; email settings; CRM status/configuration
+   - Database table for system-wide settings
+   - Key-value storage for configurations
 
 ---
 
@@ -152,56 +189,61 @@ mysql --version
 
 Get the system running in 5 minutes:
 
-### 1. Install MySQL
-Download and install MySQL Community Server from [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/)
+### 1. Ensure MySQL is Running
+MySQL Server 8.4+ is required. If not installed, download from [MySQL Downloads](https://dev.mysql.com/downloads/mysql/)
 
-Remember your root password during installation.
-
-### 2. Navigate to Project
-```bash
-cd c:\Users\User\Desktop\crm-system-main
+**Check if MySQL is running:**
+```powershell
+Get-Service -Name MySQL*
 ```
 
-### 3. Run Automated Setup
+**Start MySQL if needed:**
+```powershell
+# If MySQL service exists
+Get-Service -Name MySQL* | Start-Service
+
+# If no service, start manually:
+Start-Process -FilePath "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" -ArgumentList "--datadir=`"C:\ProgramData\MySQL\MySQL Server 8.4\Data`"" -WindowStyle Hidden
+```
+
+### 2. Initialize MySQL (First Time Only)
+If MySQL was just installed and never initialized:
+```powershell
+# Create data directory
+New-Item -ItemType Directory -Path "C:\ProgramData\MySQL\MySQL Server 8.4\Data" -Force
+
+# Initialize MySQL with no root password
+& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" --initialize-insecure --datadir="C:\ProgramData\MySQL\MySQL Server 8.4\Data"
+```
+
+### 3. Run Database Setup
 ```bash
 cd backend
-npm run setup -- your_mysql_root_password
-```
-
-Example:
-```bash
-npm run setup -- root123
+node fullSetup.js
 ```
 
 This will:
-- ✅ Create the database
-- ✅ Import schemas and data
-- ✅ Seed sample users and tickets
+- ✅ Create the database `financial_crm_db`
+- ✅ Import all table schemas (users, tickets, customers, leads, tasks, etc.)
+- ✅ Seed sample data (users, tickets, customers, leads)
 - ✅ Configure backend environment
 
-### 4. Update Backend Configuration
-Edit `backend/.env`:
-```env
-DB_PASSWORD=your_mysql_root_password
-USE_DEV_LOGIN=false
-```
-
-### 5. Start Services
-
-**Terminal 1 - Backend:**
+### 4. Start Backend Server
 ```bash
 cd backend
-npm start
+node server.js
 ```
 
-**Terminal 2 - Frontend:**
+Expected output: `Server running on port 5000` and `✅ Connected to database`
+
+### 5. Start Frontend (New Terminal)
 ```bash
 cd frontend
-npm run dev
+npm run dev -- --host --port 5174
 ```
 
 ### 6. Access the Application
-Open your browser and navigate to: **http://localhost:5174/**
+Open your browser: **http://localhost:5174/**
 
 ---
 
@@ -234,13 +276,20 @@ npm install
 Ensure MySQL is running:
 ```powershell
 # Windows - PowerShell
+# Check if service exists
+Get-Service -Name MySQL*
+
+# If service exists, start it
 Get-Service -Name MySQL* | Start-Service
+
+# If no service, start manually
+Start-Process -FilePath "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" -ArgumentList "--datadir=`"C:\ProgramData\MySQL\MySQL Server 8.4\Data`"" -WindowStyle Hidden
 ```
 
 Create the database and import schemas:
 ```bash
 cd backend
-npm run setup -- your_root_password
+node fullSetup.js
 ```
 
 #### Step 4: Configure Environment
@@ -250,13 +299,15 @@ npm run setup -- your_root_password
 PORT=5000
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=your_root_password
+DB_PASSWORD=
 DB_NAME=financial_crm_db
 JWT_SECRET=your_jwt_secret_key_here_change_in_production
 GMAIL_USER=your_gmail@gmail.com
 GMAIL_PASS=your_gmail_app_password
 USE_DEV_LOGIN=false
 ```
+
+**Note:** Root password is empty by default with `--initialize-insecure`. To set a password, use MySQL commands after initialization.
 
 **Frontend Configuration** (`frontend/.env`):
 ```env
@@ -267,11 +318,11 @@ VITE_BASE_URL=http://localhost:5000
 ```bash
 # Backend
 cd backend
-npm start
+node server.js
 
 # Frontend (in another terminal)
 cd frontend
-npm run dev
+npm run dev -- --host --port 5174
 ```
 
 #### Step 6: Access Application
@@ -290,10 +341,19 @@ After setup, use these credentials to log in:
 | Mortgage Broker | `broker1` | `broker123` | broker1@crm.com |
 | Planner | `planner2` | `planner456` | planner2@crm.com |
 
-### Development Mode
-If MySQL is not set up, use development credentials:
-- Username: `testuser`
-- Password: `test123`
+### Role Capabilities
+
+**Admin:**
+- Full user management (create, edit, delete users)
+- View all tickets, customers, leads
+- System-wide statistics
+
+**Financial Planner / Mortgage Broker:**
+- Create and manage tickets
+- Add and manage customers
+- Create and convert leads
+- Assign and track tasks
+- View assigned tickets and owned records
 
 ---
 
@@ -357,6 +417,7 @@ crm-system-main/
 │
 ├── financial_crm_db_users.sql         # User table schema
 ├── financial_crm_db_tickets.sql       # Ticket table schema
+├── financial_crm_db_crm.sql           # CRM extension tables (customers, leads, tasks, etc.)
 ├── SETUP.bat                          # Windows setup helper
 └── README.md                          # This file
 ```
@@ -373,20 +434,20 @@ http://localhost:5000/api/v1
 ### Authentication Endpoints
 
 #### Login
-```
+```http
 POST /auth/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "admin123"
+  "username": "planner1",
+  "password": "planner123"
 }
 
 Response:
 {
   "token": "eyJhbGciOiJIUzI1NiIs...",
-  "role": "admin",
-  "id": 1
+  "role": "financial_planner",
+  "id": 2
 }
 ```
 
@@ -489,22 +550,167 @@ DELETE /users/{id}
 Headers: Authorization: Bearer {token}
 ```
 
+### Customer Endpoints
+
+#### Get All Customers
+```http
+GET /customers
+Headers: Authorization: Bearer {token}
+```
+
+#### Create Customer
+```http
+POST /customers
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Acme Corp",
+  "email": "contact@acme.com",
+  "phone": "555-1234",
+  "address": "123 Business Ave",
+  "ownerId": 2
+}
+```
+
+#### Get Customer Details
+```http
+GET /customers/{id}
+Headers: Authorization: Bearer {token}
+
+Response includes customer data + interaction history
+```
+
+#### Update Customer
+```http
+PUT /customers/{id}
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "status": "inactive"
+}
+```
+
+#### Delete Customer
+```http
+DELETE /customers/{id}
+Headers: Authorization: Bearer {token}
+```
+
+### Lead Endpoints
+
+#### Get All Leads
+```http
+GET /leads
+Headers: Authorization: Bearer {token}
+```
+
+#### Create Lead
+```http
+POST /leads
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Potential Client",
+  "email": "lead@example.com",
+  "phone": "555-5678",
+  "source": "Website",
+  "value": 100000,
+  "notes": "Interested in mortgage",
+  "nextActionAt": "2026-01-25T10:00:00",
+  "ownerId": 3
+}
+```
+
+#### Update Lead Status
+```http
+PUT /leads/{id}/status
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "status": "qualified"
+}
+```
+Allowed statuses: new, contacted, qualified, lost
+
+#### Convert Lead to Customer
+```http
+POST /leads/{id}/convert
+Headers: Authorization: Bearer {token}
+
+Response:
+{
+  "message": "Lead converted",
+  "customerId": 5
+}
+```
+
+### Task Endpoints
+
+#### Get My Tasks
+```http
+GET /tasks
+Headers: Authorization: Bearer {token}
+
+Returns all tasks assigned to authenticated user
+```
+
+#### Create Task
+```http
+POST /tasks
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "title": "Follow up with client",
+  "description": "Call about refinancing options",
+  "dueDate": "2026-01-22T14:00:00",
+  "relatedType": "lead",
+  "relatedId": 5,
+  "assignedTo": 2,
+  "reminderAt": "2026-01-22T13:00:00"
+}
+```
+
+#### Update Task Status
+```http
+PUT /tasks/{id}/status
+Headers: Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "status": "done"
+}
+```
+Allowed statuses: open, in_progress, done
+
+#### Delete Task
+```http
+DELETE /tasks/{id}
+Headers: Authorization: Bearer {token}
+```
+
 ---
 
 ## 📝 npm Scripts
 
 ### Backend Scripts
 ```bash
-npm start           # Start production server
+npm start           # Start production server (node server.js)
 npm run dev         # Start with nodemon (hot reload)
-npm run seed:test   # Create test user
 npm run seed:prod   # Seed database with sample data
-npm run setup       # Full automated setup
+node fullSetup.js   # Full database setup (creates DB, tables, seeds data)
+node seedDatabase.js # Seed data only (requires existing tables)
 ```
 
 ### Frontend Scripts
 ```bash
-npm run dev         # Start development server
+npm run dev         # Start development server (default port 5173)
+npm run dev -- --host --port 5174  # Start on specific port
 npm run build       # Build for production
 npm run preview     # Preview production build
 npm run lint        # Run ESLint
@@ -517,33 +723,68 @@ npm run lint        # Run ESLint
 ### Issue: "Invalid credentials" on login
 
 **Solution:**
-1. Verify backend is running: `npm start` in backend folder
-2. Check `.env` file has correct settings
-3. For MySQL DB, ensure MySQL service is running
-4. Clear browser cache and refresh
+1. Verify backend is running: `node server.js` in backend folder
+2. Check `.env` file: `USE_DEV_LOGIN=false` and `DB_PASSWORD=` (empty for default setup)
+3. Ensure MySQL is running and database exists
+4. Verify user exists in database:
+   ```bash
+   mysql -u root financial_crm_db -e "SELECT username, role FROM users;"
+   ```
 
 ### Issue: MySQL connection refused
 
 **Solution:**
 ```powershell
-# Start MySQL service
-Get-Service -Name MySQL* | Start-Service
+# Check if MySQL is running
+Get-Process -Name mysqld -ErrorAction SilentlyContinue
 
-# Verify it's running
-Get-Service -Name MySQL* | Format-Table Status, Name
+# If not running, start it manually:
+Start-Process -FilePath "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" -ArgumentList "--datadir=`"C:\ProgramData\MySQL\MySQL Server 8.4\Data`"" -WindowStyle Hidden
+
+# Verify connection
+& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe" -u root -e "SELECT 1"
 ```
 
-### Issue: Port 5173/5174 already in use
+### Issue: Database tables don't exist
 
 **Solution:**
 ```bash
-# Kill the process using the port
-# On Windows - find process using port 5173
-Get-Process -Name "node" | Stop-Process -Force
+# Run full setup to create all tables
+cd backend
+node fullSetup.js
 
-# Then restart the server
-npm run dev
+# Or import SQL files manually:
+Get-Content financial_crm_db_users.sql | mysql -u root financial_crm_db
+Get-Content financial_crm_db_tickets.sql | mysql -u root financial_crm_db
+Get-Content financial_crm_db_crm.sql | mysql -u root financial_crm_db
 ```
+
+### Issue: Port 5000 or 5174 already in use
+
+**Solution:**
+```powershell
+# Kill node processes
+Get-Process -Name node | Stop-Process -Force
+
+# Restart servers
+cd backend
+node server.js
+
+# In new terminal
+cd frontend
+npm run dev -- --host --port 5174
+```
+
+### Issue: Backend shows "Database connection failed"
+
+**Solution:**
+1. Check if MySQL is running (see MySQL connection issue above)
+2. Verify database exists:
+   ```bash
+   mysql -u root -e "SHOW DATABASES LIKE 'financial_crm_db';"
+   ```
+3. If database doesn't exist, run `node fullSetup.js`
+4. Check backend/.env has correct DB credentials
 
 ### Issue: Backend shows "Error connecting to database"
 

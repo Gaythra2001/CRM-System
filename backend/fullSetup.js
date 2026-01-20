@@ -5,7 +5,7 @@ const path = require("path");
 const args = process.argv.slice(2);
 const rootPassword = args[0] || "";
 
-if (!rootPassword) {
+if (!rootPassword && process.argv.length > 2) {
   console.log("\n❌ MySQL root password is required!");
   console.log("\nUsage: node fullSetup.js YOUR_MYSQL_ROOT_PASSWORD\n");
   console.log("Example: node fullSetup.js root123\n");
