@@ -155,6 +155,96 @@ const seedDatabase = async () => {
       }
     }
 
+    // Seed customers
+    const customers = [
+      {
+        name: "Acme Holdings",
+        email: "contact@acme.com",
+        phone: "555-2000",
+        address: "100 Market St, SF",
+        created_by: userMap["planner1"] || 1,
+        owner_id: userMap["planner1"] || 1,
+      },
+      {
+        name: "Harbor Investments",
+        email: "hello@harbor.com",
+        phone: "555-2001",
+        address: "42 Ocean Ave, Miami",
+        created_by: userMap["planner2"] || 1,
+        owner_id: userMap["planner2"] || 1,
+      },
+    ];
+
+    for (const customer of customers) {
+      try {
+        await connection.query(
+          "INSERT INTO customers (name, email, phone, address, created_by, owner_id) VALUES (?, ?, ?, ?, ?, ?)",
+          [
+            customer.name,
+            customer.email,
+            customer.phone,
+            customer.address,
+            customer.created_by,
+            customer.owner_id,
+          ]
+        );
+        console.log(`✅ Seeded customer: ${customer.name}`);
+      } catch (err) {
+        console.log(`⏭️  Customer ${customer.name} skipped`);
+      }
+    }
+
+    // Seed leads
+    const leads = [
+      {
+        name: "Nova Fintech",
+        email: "info@nova.com",
+        phone: "555-3000",
+        source: "Website",
+        status: "new",
+        value: 250000,
+        notes: "Interested in refinancing package.",
+        next_action_at: new Date(Date.now() + 3 * 24 * 3600 * 1000),
+        created_by: userMap["planner1"] || 1,
+        owner_id: userMap["broker1"] || 3,
+      },
+      {
+        name: "Evergreen Homes",
+        email: "contact@evergreen.com",
+        phone: "555-3001",
+        source: "Referral",
+        status: "contacted",
+        value: 150000,
+        notes: "Requesting rate sheet.",
+        next_action_at: new Date(Date.now() + 5 * 24 * 3600 * 1000),
+        created_by: userMap["planner2"] || 1,
+        owner_id: userMap["broker1"] || 3,
+      },
+    ];
+
+    for (const lead of leads) {
+      try {
+        await connection.query(
+          "INSERT INTO leads (name, email, phone, source, status, value, notes, next_action_at, created_by, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [
+            lead.name,
+            lead.email,
+            lead.phone,
+            lead.source,
+            lead.status,
+            lead.value,
+            lead.notes,
+            lead.next_action_at,
+            lead.created_by,
+            lead.owner_id,
+          ]
+        );
+        console.log(`✅ Seeded lead: ${lead.name}`);
+      } catch (err) {
+        console.log(`⏭️  Lead ${lead.name} skipped`);
+      }
+    }
+
     console.log("\n✨ Database seeding complete!");
     console.log("\n📋 Sample Credentials:");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");

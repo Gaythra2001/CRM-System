@@ -64,6 +64,46 @@ A modern, full-stack Customer Relationship Management (CRM) system designed for 
 
 ---
 
+## 🧭 Core CRM Components
+
+1. **User & Role Management**
+  - Admin, Manager, Staff roles; login/logout; password reset; granular permissions
+
+2. **Customer Management**
+  - Add/Edit/Delete customers; profiles (name, phone, email, address); interaction history
+
+3. **Lead Management**
+  - Capture leads; statuses (New, Contacted, Qualified, Lost); convert lead → customer
+
+4. **Contact Management**
+  - Multiple contacts per customer; call/email logs; per-contact notes
+
+5. **Sales Management**
+  - Deals/opportunities; stages (Prospect → Negotiation → Won); expected revenue; close dates
+
+6. **Task & Activity Management**
+  - Create/assign tasks; due dates & reminders; follow-ups
+
+7. **Communication Tracking**
+  - Email tracking; call logs; meeting notes; optional WhatsApp/SMS
+
+8. **Reports & Dashboard**
+  - Sales reports; lead conversion; customer growth; user performance
+
+9. **Notification System**
+  - Task reminders; follow-up alerts; new lead notifications
+
+10. **Document Management**
+   - Upload/store contracts, invoices, and customer documents
+
+11. **Billing & Invoicing (Optional)**
+   - Create invoices; payment status; receipts; tax calculation
+
+12. **Settings & Configuration**
+   - Company details; email settings; CRM status/configuration
+
+---
+
 ## 🛠️ Tech Stack
 
 ### Frontend

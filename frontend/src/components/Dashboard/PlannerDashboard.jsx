@@ -2,6 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import TicketForm from "../Ticket/TicketForm";
 import TicketList from "../Ticket/TicketList";
 import { fetchTickets, updateTicketStatus, deleteTicket } from "../../service/ticketsAPI";
+import { fetchCustomers } from "../../service/customersAPI";
+import { fetchLeads, updateLeadStatus, convertLead } from "../../service/leadsAPI";
+import { fetchTasks, updateTaskStatus, deleteTask } from "../../service/tasksAPI";
+import CustomerForm from "../Customer/CustomerForm";
+import CustomerList from "../Customer/CustomerList";
+import LeadForm from "../Lead/LeadForm";
+import LeadList from "../Lead/LeadList";
+import TaskForm from "../Task/TaskForm";
+import TaskList from "../Task/TaskList";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
@@ -9,10 +18,16 @@ const PlannerDashboard = () => {
   const { token, userId , role} = useContext(AuthContext);
   const [tickets, setTickets] = useState([]);
   const [toggle, setToggle] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [leads, setLeads] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     if (token && userId) {
       getTickets();
+      loadCustomers();
+      loadLeads();
+      loadTasks();
     }
   }, [token, userId, toggle]);
 
@@ -31,6 +46,33 @@ const PlannerDashboard = () => {
       setTickets(filteredTickets);
     } catch (error) {
       console.error("Error fetching tickets:", error);
+    }
+  };
+
+  const loadCustomers = async () => {
+    try {
+      const res = await fetchCustomers(token);
+      setCustomers(res);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  const loadLeads = async () => {
+    try {
+      const res = await fetchLeads(token);
+      setLeads(res);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    }
+  };
+
+  const loadTasks = async () => {
+    try {
+      const res = await fetchTasks(token);
+      setTasks(res);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
     }
   };
 
@@ -59,6 +101,45 @@ const PlannerDashboard = () => {
       toast.success("Ticket deleted successfully");
     } catch (error) {
       toast.error("Failed to delete ticket");
+    }
+  };
+
+  const handleLeadStatusChange = async (leadId, status) => {
+    try {
+      await updateLeadStatus(token, leadId, status);
+      setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, status } : l)));
+      toast.success("Lead status updated");
+    } catch (err) {
+      toast.error("Failed to update lead");
+    }
+  };
+
+  const handleLeadConvert = async (leadId) => {
+    try {
+      await convertLead(token, leadId);
+      toast.success("Lead converted to customer");
+      loadLeads();
+      loadCustomers();
+    } catch (err) {
+      toast.error("Failed to convert lead");
+    }
+  };
+
+  const handleTaskStatus = async (taskId, status) => {
+    try {
+      await updateTaskStatus(token, taskId, status);
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status } : t)));
+    } catch (err) {
+      toast.error("Failed to update task");
+    }
+  };
+
+  const handleTaskDelete = async (taskId) => {
+    try {
+      await deleteTask(token, taskId);
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    } catch (err) {
+      toast.error("Failed to delete task");
     }
   };
 
@@ -109,6 +190,50 @@ const PlannerDashboard = () => {
           updateTicketStatusInList={handleUpdateTicketStatus} 
           deleteTicketInList={handleDeleteTicket}
         />
+      </div>
+
+      {/* Customers */}
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">New Customer</h2>
+          </div>
+          <CustomerForm onCreated={loadCustomers} />
+        </div>
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Customers</h2>
+          </div>
+          <CustomerList customers={customers} />
+        </div>
+      </div>
+
+      {/* Leads */}
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4">New Lead</h2>
+          <LeadForm onCreated={loadLeads} />
+        </div>
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Leads</h2>
+          </div>
+          <LeadList leads={leads} onChangeStatus={handleLeadStatusChange} onConvert={handleLeadConvert} />
+        </div>
+      </div>
+
+      {/* Tasks */}
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4">New Task</h2>
+          <TaskForm onCreated={loadTasks} />
+        </div>
+        <div className="p-6 rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">My Tasks</h2>
+          </div>
+          <TaskList tasks={tasks} onStatusChange={handleTaskStatus} onDelete={handleTaskDelete} />
+        </div>
       </div>
     </div>
   );
